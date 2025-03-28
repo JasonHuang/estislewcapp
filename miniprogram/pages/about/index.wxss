@@ -1,0 +1,118 @@
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 10rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+/* 公司简介 */
+.company-desc {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 企业文化 */
+.culture-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.culture-item {
+  padding: 20rpx;
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+}
+
+.culture-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.culture-desc {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 团队介绍 */
+.team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.team-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+}
+
+.team-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  margin-right: 20rpx;
+}
+
+.team-info {
+  flex: 1;
+}
+
+.team-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.team-position {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 联系方式 */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+}
+
+.contact-item .label {
+  font-size: 28rpx;
+  color: #666;
+  width: 100rpx;
+}
+
+.contact-item .value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+} 

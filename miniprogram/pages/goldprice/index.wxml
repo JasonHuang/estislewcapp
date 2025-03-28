@@ -1,0 +1,40 @@
+<view class="container">
+  <!-- 金价类型选择 -->
+  <view class="type-selector">
+    <picker bindchange="onTypeChange" value="{{selectedType}}" range="{{types}}" range-key="label">
+      <view class="picker">
+        当前选择：{{selectedType}}
+      </view>
+    </picker>
+  </view>
+
+  <!-- 当前金价 -->
+  <view class="current-price">
+    <view class="price-title">当前金价</view>
+    <view class="price-value">
+      <text class="number">{{currentPrice.price || '--'}}</text>
+      <text class="unit">元/克</text>
+    </view>
+    <view class="price-time">更新时间：{{currentPrice.timestamp || '--'}}</view>
+  </view>
+
+  <!-- 历史金价 -->
+  <view class="history-prices">
+    <view class="section-title">历史金价</view>
+    <view class="price-list">
+      <view class="price-item" wx:for="{{historyPrices}}" wx:key="timestamp">
+        <view class="price-info">
+          <text class="price">{{item.price}}</text>
+          <text class="unit">元/克</text>
+        </view>
+        <view class="time">{{item.timestamp}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+</view> 

@@ -1,0 +1,51 @@
+<view class="container">
+  <!-- 公司简介 -->
+  <view class="section">
+    <view class="section-title">公司简介</view>
+    <view class="company-desc">{{companyInfo.description}}</view>
+  </view>
+
+  <!-- 企业文化 -->
+  <view class="section">
+    <view class="section-title">企业文化</view>
+    <view class="culture-list">
+      <view class="culture-item" wx:for="{{companyCulture}}" wx:key="title">
+        <view class="culture-title">{{item.title}}</view>
+        <view class="culture-desc">{{item.description}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 团队介绍 -->
+  <view class="section">
+    <view class="section-title">团队介绍</view>
+    <view class="team-list">
+      <view class="team-item" wx:for="{{teamMembers}}" wx:key="name" bindtap="previewImage" data-src="{{item.image}}">
+        <image src="{{item.image}}" mode="aspectFill" class="team-image"></image>
+        <view class="team-info">
+          <view class="team-name">{{item.name}}</view>
+          <view class="team-position">{{item.position}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="section">
+    <view class="section-title">联系我们</view>
+    <view class="contact-info">
+      <view class="contact-item">
+        <text class="label">地址：</text>
+        <text class="value">{{companyInfo.address}}</text>
+      </view>
+      <view class="contact-item" bindtap="makePhoneCall">
+        <text class="label">电话：</text>
+        <text class="value">{{companyInfo.phone}}</text>
+      </view>
+      <view class="contact-item" bindtap="copyEmail">
+        <text class="label">邮箱：</text>
+        <text class="value">{{companyInfo.email}}</text>
+      </view>
+    </view>
+  </view>
+</view> 

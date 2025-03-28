@@ -1,0 +1,58 @@
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 产品详情 -->
+  <block wx:if="{{product}}">
+    <!-- 图片轮播 -->
+    <swiper 
+      class="image-swiper" 
+      indicator-dots
+      autoplay
+      circular
+      bindchange="onImageChange"
+      bindtap="onPreviewImage"
+    >
+      <swiper-item wx:for="{{product.images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="product-image"></image>
+      </swiper-item>
+    </swiper>
+
+    <!-- 产品信息 -->
+    <view class="product-info">
+      <view class="product-name">{{product.name}}</view>
+      <view class="product-price">¥{{product.price}}</view>
+      <view class="product-category">{{product.category}}</view>
+      
+      <!-- 产品规格 -->
+      <view class="specifications">
+        <view class="section-title">产品规格</view>
+        <view class="spec-item" wx:if="{{product.specifications.material}}">
+          <text class="label">材质：</text>
+          <text class="value">{{product.specifications.material}}</text>
+        </view>
+        <view class="spec-item" wx:if="{{product.specifications.weight}}">
+          <text class="label">重量：</text>
+          <text class="value">{{product.specifications.weight}}g</text>
+        </view>
+        <view class="spec-item" wx:if="{{product.specifications.size}}">
+          <text class="label">尺寸：</text>
+          <text class="value">{{product.specifications.size}}</text>
+        </view>
+        <view class="spec-item" wx:if="{{product.specifications.purity}}">
+          <text class="label">纯度：</text>
+          <text class="value">{{product.specifications.purity}}</text>
+        </view>
+      </view>
+
+      <!-- 产品描述 -->
+      <view class="description">
+        <view class="section-title">产品描述</view>
+        <text class="desc-text">{{product.description}}</text>
+      </view>
+    </view>
+  </block>
+</view> 

@@ -6,18 +6,30 @@ const axios = require('axios');
 // 获取最新金价
 router.get('/latest', async (req, res) => {
   try {
-    const { type } = req.query;
-    const query = type ? { type } : {};
+    const { type = 'Au9999' } = req.query;
     
-    const latestPrices = await GoldPrice.find(query)
-      .sort({ timestamp: -1 })
-      .limit(1);
-
-    if (latestPrices.length === 0) {
+    // 使用新浪财经API获取金价
+    const response = await axios.get(`https://hq.sinajs.cn/list=hf_${type.toLowerCase()}`);
+    
+    // 解析返回的数据
+    const data = response.data.split('=')[1].replace(/"/g, '').split(',');
+    
+    if (data.length < 2) {
       return res.status(404).json({ message: '暂无金价数据' });
     }
 
-    res.json(latestPrices[0]);
+    const price = parseFloat(data[1]);
+    
+    // 保存到数据库
+    const goldPrice = new GoldPrice({
+      type,
+      price,
+      source: 'sina-finance',
+      timestamp: new Date()
+    });
+    await goldPrice.save();
+
+    res.json(goldPrice);
   } catch (error) {
     res.status(500).json({ message: '获取金价失败', error: error.message });
   }

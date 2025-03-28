@@ -11,10 +11,6 @@ const productSchema = new mongoose.Schema({
     required: true,
     enum: ['戒指', '项链', '手链', '耳环', '手镯', '其他']
   },
-  description: {
-    type: String,
-    required: true
-  },
   price: {
     type: Number,
     required: true,
@@ -24,16 +20,24 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   }],
+  description: {
+    type: String,
+    required: true
+  },
   specifications: {
     material: String,
-    weight: Number,
+    weight: String,
     size: String,
+    color: String,
     purity: String
   },
-  stock: {
-    type: Number,
-    default: 0,
-    min: 0
+  isHot: {
+    type: Boolean,
+    default: false
+  },
+  isNewProduct: {
+    type: Boolean,
+    default: true
   },
   isActive: {
     type: Boolean,

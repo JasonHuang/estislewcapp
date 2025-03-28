@@ -1,0 +1,41 @@
+<view class="container">
+  <!-- 分类选择 -->
+  <scroll-view class="categories" scroll-x>
+    <view 
+      class="category-item {{currentCategory === item ? 'active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="*this"
+      data-category="{{item}}"
+      bindtap="onCategoryChange"
+    >
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <!-- 产品列表 -->
+  <view class="product-list">
+    <view 
+      class="product-item"
+      wx:for="{{products}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onProductTap"
+    >
+      <image class="product-image" src="{{item.images[0]}}" mode="aspectFill"></image>
+      <view class="product-info">
+        <view class="product-name">{{item.name}}</view>
+        <view class="product-price">¥{{item.price}}</view>
+        <view class="product-category">{{item.category}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+  <view class="no-more" wx:if="{{!hasMore && products.length > 0}}">
+    没有更多了
+  </view>
+</view> 

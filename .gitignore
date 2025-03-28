@@ -1,12 +1,61 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+dist/
+build/
+miniprogram_npm/
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Server specific
+server/uploads/
+server/logs/
+
+# Admin specific
+admin/.vite/
+admin/dist/
+
+# Miniprogram specific
+miniprogram_npm/
+miniprogram/private.wxss
+miniprogram/private.config.json
+
+# Docker
+.docker/
+docker-compose.override.yml
+
 # 微信开发者工具本地配置
 project.private.config.json
 
-# 依赖目录
-miniprogram_npm/
-node_modules/
-
 # 编译输出
-dist/
 miniprogram_dist/
 
 # 临时文件

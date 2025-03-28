@@ -1,0 +1,51 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: estislewcapp-server
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - ./server/uploads:/app/uploads
+      - ./server/logs:/app/logs
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=7d
+      - UPLOAD_DIR=uploads
+      - MAX_FILE_SIZE=5242880
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+      - LOG_LEVEL=debug
+      - LOG_FILE=logs/app.log
+    networks:
+      - estislewcapp-network
+    command: npm run dev
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: estislewcapp-admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./admin:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3001/api
+      - VITE_APP_TITLE=珠宝管理系统
+      - VITE_APP_DESCRIPTION=深圳市屿夏珠宝有限公司管理系统
+      - VITE_UPLOAD_URL=http://localhost:3001/api/upload
+      - VITE_MAX_FILE_SIZE=5242880
+    networks:
+      - estislewcapp-network
+    command: npm run dev
+
+networks:
+  estislewcapp-network:
+    driver: bridge 
