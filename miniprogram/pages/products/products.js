@@ -1,130 +1,119 @@
 // products.js
+const api = require('../../utils/api.js')
+
 Page({
   data: {
-    categories: [
-      { id: 'all', name: '全部' },
-      { id: 'necklace', name: '项链' },
-      { id: 'ring', name: '戒指' },
-      { id: 'bracelet', name: '手链' },
-      { id: 'earring', name: '耳饰' }
-    ],
+    categories: [{ _id: 'all', name: '全部' }],
     currentCategory: 'all',
-    products: [
-      {
-        id: 1,
-        name: '18K金钻石项链',
-        price: '¥3,999',
-        image: '/images/product1.jpg',
-        category: 'necklace',
-        description: '采用18K金材质，镶嵌天然钻石，简约而不失优雅',
-        detail: {
-          material: '18K金、钻石',
-          weight: '3.5g',
-          style: '简约',
-          suitable: '日常、派对'
-        }
-      },
-      {
-        id: 2,
-        name: '玫瑰金戒指',
-        price: '¥2,599',
-        image: '/images/product2.jpg',
-        category: 'ring',
-        description: '玫瑰金材质，精致设计，适合日常佩戴',
-        detail: {
-          material: '18K玫瑰金',
-          weight: '2.8g',
-          style: '时尚',
-          suitable: '日常、约会'
-        }
-      },
-      {
-        id: 3,
-        name: '925银手链',
-        price: '¥899',
-        image: '/images/product3.jpg',
-        category: 'bracelet',
-        description: '925银材质，简约百搭，适合各种场合',
-        detail: {
-          material: '925银',
-          weight: '5.2g',
-          style: '简约',
-          suitable: '日常、商务'
-        }
-      },
-      {
-        id: 4,
-        name: '水滴形钻石耳环',
-        price: '¥1,899',
-        image: '/images/product4.jpg',
-        category: 'earring',
-        description: '水滴形设计，镶嵌天然钻石，闪耀动人',
-        detail: {
-          material: '18K白金、钻石',
-          weight: '2.3g',
-          style: '优雅',
-          suitable: '晚宴、派对'
-        }
-      },
-      {
-        id: 5,
-        name: '珍珠项链',
-        price: '¥1,299',
-        image: '/images/product5.jpg',
-        category: 'necklace',
-        description: '天然淡水珍珠，优雅大方，适合正式场合',
-        detail: {
-          material: '淡水珍珠、925银',
-          weight: '12g',
-          style: '典雅',
-          suitable: '正式场合、婚礼'
-        }
-      },
-      {
-        id: 6,
-        name: '双层手链',
-        price: '¥799',
-        image: '/images/product6.jpg',
-        category: 'bracelet',
-        description: '双层设计，925银材质，镶嵌锆石，时尚个性',
-        detail: {
-          material: '925银、锆石',
-          weight: '6.5g',
-          style: '时尚',
-          suitable: '日常、派对'
-        }
-      }
-    ],
-    filteredProducts: []
+    products: [],
+    filteredProducts: [],
+    loading: true,
+    page: 1,
+    limit: 10,
+    hasMore: true,
+    baseUrl: 'http://127.0.0.1:3001' // 使用本地回环地址
   },
   onLoad: function() {
     wx.setNavigationBarTitle({
       title: '产品展示'
     })
-    this.filterProducts('all')
+    this.fetchCategories()
+    this.fetchProducts()
+  },
+  fetchCategories: function() {
+    wx.showLoading({
+      title: '加载中...',
+    })
+    api.products.getCategories().then(res => {
+      // 添加全部分类到开头
+      const allCategories = [{ _id: 'all', name: '全部' }].concat(
+        res.map(category => ({
+          _id: category._id,
+          name: category.name
+        }))
+      )
+      this.setData({
+        categories: allCategories
+      })
+    }).catch(err => {
+      console.error('获取分类失败:', err)
+      wx.showToast({
+        title: '获取分类失败',
+        icon: 'none'
+      })
+    }).finally(() => {
+      wx.hideLoading()
+    })
+  },
+  fetchProducts: function(isLoadMore = false) {
+    if (!isLoadMore) {
+      this.setData({
+        loading: true,
+        page: 1,
+        hasMore: true
+      })
+    }
+    
+    const params = {
+      page: this.data.page,
+      limit: this.data.limit
+    }
+    
+    // 如果不是全部分类，则按分类筛选
+    if (this.data.currentCategory !== 'all') {
+      params.category = this.data.currentCategory
+    }
+    
+    api.products.getList(params).then(res => {
+      const formattedProducts = res.products.map(product => ({
+        id: product._id,
+        name: product.name,
+        price: `¥${product.price.toFixed(2)}`,
+        image: product.images[0] ? this.data.baseUrl + product.images[0] : '../images/products/images-1743149752673-55580222.jpg',
+        category: product.category,
+        description: product.description
+      }))
+      
+      this.setData({
+        products: isLoadMore ? this.data.products.concat(formattedProducts) : formattedProducts,
+        filteredProducts: isLoadMore ? this.data.filteredProducts.concat(formattedProducts) : formattedProducts,
+        loading: false,
+        hasMore: res.products.length === this.data.limit
+      })
+    }).catch(err => {
+      console.error('获取产品列表失败:', err)
+      wx.showToast({
+        title: '获取产品失败',
+        icon: 'none'
+      })
+      this.setData({
+        loading: false
+      })
+    })
+  },
+  // 加载更多产品
+  loadMore: function() {
+    if (!this.data.hasMore || this.data.loading) return
+    
+    this.setData({
+      page: this.data.page + 1
+    })
+    
+    this.fetchProducts(true)
   },
   switchCategory: function(e) {
     const category = e.currentTarget.dataset.category
     this.setData({
-      currentCategory: category
+      currentCategory: category,
+      products: [],
+      filteredProducts: []
     })
-    this.filterProducts(category)
-  },
-  filterProducts: function(category) {
-    let filtered = this.data.products
-    if (category !== 'all') {
-      filtered = this.data.products.filter(item => item.category === category)
-    }
-    this.setData({
-      filteredProducts: filtered
-    })
+    this.fetchProducts()
   },
   viewProductDetail: function(e) {
     const id = e.currentTarget.dataset.id
-    wx.showModal({
-      title: '产品详情',
-      content: '该功能正在开发中，敬请期待！',
-      showCancel: false
+    wx.navigateTo({
+      url: `/pages/products/detail?id=${id}`
     })
   },
   previewImage: function(e) {
@@ -133,5 +122,14 @@ Page({
       current: current,
       urls: [current]
     })
+  },
+  // 下拉刷新
+  onPullDownRefresh: function() {
+    this.fetchProducts()
+    wx.stopPullDownRefresh()
+  },
+  // 上拉加载更多
+  onReachBottom: function() {
+    this.loadMore()
   }
 }) 

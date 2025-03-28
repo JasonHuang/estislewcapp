@@ -3,8 +3,9 @@ const api = require('../../utils/api');
 Page({
   data: {
     product: null,
-    loading: false,
-    currentImageIndex: 0
+    loading: true,
+    currentImageIndex: 0,
+    baseUrl: 'http://127.0.0.1:3001' // 使用本地回环地址
   },
 
   onLoad(options) {
@@ -14,19 +15,35 @@ Page({
   },
 
   // 加载产品详情
-  async loadProductDetail(id) {
-    try {
-      this.setData({ loading: true });
-      const product = await api.products.getDetail(id);
-      this.setData({ product });
-    } catch (error) {
-      wx.showToast({
-        title: '加载失败',
-        icon: 'none'
+  loadProductDetail(id) {
+    this.setData({ loading: true });
+    api.products.getDetail(id)
+      .then(product => {
+        // 处理图片URL
+        const formattedProduct = {
+          ...product,
+          images: product.images.map(img => this.data.baseUrl + img),
+          formattedPrice: `¥${product.price.toFixed(2)}`
+        };
+        
+        this.setData({ 
+          product: formattedProduct,
+          loading: false
+        });
+        
+        // 设置页面标题
+        wx.setNavigationBarTitle({
+          title: product.name || '产品详情'
+        });
+      })
+      .catch(error => {
+        console.error('加载产品详情失败:', error);
+        wx.showToast({
+          title: '加载失败',
+          icon: 'none'
+        });
+        this.setData({ loading: false });
       });
-    } finally {
-      this.setData({ loading: false });
-    }
   },
 
   // 切换图片

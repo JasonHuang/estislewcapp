@@ -1,15 +1,24 @@
 // 开发环境配置
 const DEV_CONFIG = {
-  BASE_URL: 'http://192.168.1.2:3000/api'
+  BASE_URL: 'http://127.0.0.1:3001/api'  // 使用本地回环地址
 };
 
 // 生产环境配置
 const PROD_CONFIG = {
-  BASE_URL: 'https://your-production-domain.com/api'
+  BASE_URL: 'http://your-production-domain.com/api'
+};
+
+// 通过判断微信环境来选择配置
+const isDev = () => {
+  // 在开发工具中运行时，认为是开发环境
+  // 可根据实际需求调整判断逻辑
+  const accountInfo = wx.getAccountInfoSync();
+  return accountInfo.miniProgram.envVersion === 'develop' || 
+         accountInfo.miniProgram.envVersion === 'trial';
 };
 
 // 根据环境选择配置
-const config = __DEV__ ? DEV_CONFIG : PROD_CONFIG;
+const config = isDev() ? DEV_CONFIG : PROD_CONFIG;
 
 // 请求封装
 const request = (url, options = {}) => {
@@ -21,10 +30,12 @@ const request = (url, options = {}) => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data);
         } else {
-          reject(new Error(res.data.message || '请求失败'));
+          console.error(`API错误: ${res.statusCode}`, res.data);
+          reject(new Error(res.data?.message || `请求失败，状态码: ${res.statusCode}`));
         }
       },
       fail: (err) => {
+        console.error(`请求失败:`, err);
         reject(err);
       }
     });
@@ -42,6 +53,18 @@ const api = {
     }),
     // 获取产品详情
     getDetail: (id) => request(`/products/${id}`, {
+      method: 'GET'
+    }),
+    // 获取产品分类列表
+    getCategories: () => request('/categories', {
+      method: 'GET'
+    })
+  },
+
+  // 轮播图相关
+  banners: {
+    // 获取轮播图列表
+    getList: () => request('/banners', {
       method: 'GET'
     })
   },
