@@ -23,6 +23,7 @@
             <el-image
               :src="getFullImageUrl(row.image)"
               :preview-src-list="[getFullImageUrl(row.image)]"
+              preview-teleported
               fit="cover"
               class="banner-image"
             />

@@ -26,7 +26,11 @@
           </template>
           <el-table :data="recentProducts" style="width: 100%">
             <el-table-column prop="name" label="产品名称" min-width="120" />
-            <el-table-column prop="category" label="分类" min-width="80" />
+            <el-table-column prop="category" label="分类" min-width="80">
+              <template #default="{ row }">
+                {{ getCategoryName(row.category) }}
+              </template>
+            </el-table-column>
             <el-table-column prop="price" label="价格" min-width="80">
               <template #default="{ row }">
                 ¥{{ row.price.toFixed(2) }}
@@ -67,6 +71,7 @@ import { Goods, Picture, Star, User } from '@element-plus/icons-vue';
 import { getProducts } from '@/api/products';
 import { getBanners } from '@/api/banners';
 import { getUsers } from '@/api/auth';
+import { getPublicCategories } from '@/api/categories';
 
 const statistics = ref({
   totalProducts: 0,
@@ -88,9 +93,15 @@ const systemInfo = ref({
   mongoVersion: '6.0',
   serverTime: new Date().toLocaleString()
 });
+const categories = ref([]);
 
 const formatDate = (date) => {
   return new Date(date).toLocaleString();
+};
+
+const getCategoryName = (categoryId) => {
+  const category = categories.value.find(cat => cat._id === categoryId);
+  return category ? category.name : '';
 };
 
 const fetchData = async () => {
@@ -108,6 +119,10 @@ const fetchData = async () => {
     // 获取用户数据
     const usersRes = await getUsers();
     statistics.value.totalUsers = usersRes.length;
+    
+    // 获取分类数据
+    const categoriesRes = await getPublicCategories();
+    categories.value = categoriesRes;
   } catch (error) {
     ElMessage.error('获取数据失败');
   }

@@ -1,0 +1,42 @@
+/* 确保图片预览在最高层级显示 */
+.el-image-viewer__wrapper,
+.el-image-viewer__mask,
+.el-image-viewer__close,
+.el-image-viewer__btn,
+.el-image-viewer__img,
+.el-image-viewer__actions {
+  z-index: 2147483647 !important; /* 使用最大可能的z-index值 */
+}
+
+/* 确保el-dialog也在高层级 */
+.el-overlay,
+.el-overlay-dialog,
+.el-dialog,
+.el-dialog__header,
+.el-dialog__body,
+.el-dialog__footer {
+  z-index: 2147483646 !important;
+}
+
+/* 确保图片可以正常预览 */
+.el-image-viewer {
+  position: fixed !important;
+}
+
+/* 添加更多保障 */
+.el-popup-parent--hidden {
+  overflow: auto !important;
+}
+
+/* 强制修改body样式，确保弹出层正常 */
+body, html {
+  overflow: visible !important;
+  height: 100% !important;
+}
+
+/* 强制图片预览显示 */
+.el-image-viewer__wrapper {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+} 

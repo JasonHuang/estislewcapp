@@ -3,7 +3,9 @@
 </template>
 
 <script setup>
-// 组件逻辑
+// 导入全局样式
+import { RouterView } from 'vue-router';
+import './assets/styles/global.css';
 </script>
 
 <style>

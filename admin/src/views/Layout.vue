@@ -3,7 +3,7 @@
     <el-aside :width="isCollapse ? '64px' : '200px'">
       <div class="logo">
         <el-icon><Shop /></el-icon>
-        <span v-show="!isCollapse">屿夏珠宝管理系统</span>
+        <span v-show="!isCollapse">屿夏珠宝</span>
       </div>
       <el-menu
         :default-active="activeMenu"
@@ -28,7 +28,7 @@
         
         <el-menu-item index="/categories">
           <el-icon><Files /></el-icon>
-          <template #title>分类管理</template>
+          <template #title>产品分类</template>
         </el-menu-item>
         
         <el-menu-item v-if="isAdmin" index="/users">

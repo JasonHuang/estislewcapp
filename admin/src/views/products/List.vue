@@ -38,6 +38,8 @@
             <el-image
               :src="getFullImageUrl(row.images[0])"
               :preview-src-list="row.images.map(img => getFullImageUrl(img))"
+              :initial-index="0"
+              preview-teleported
               fit="cover"
               class="product-image"
             />
