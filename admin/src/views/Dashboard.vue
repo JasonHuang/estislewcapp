@@ -118,7 +118,7 @@ const statistics = ref({
 
 const recentProducts = ref([]);
 const systemInfo = ref({
-  nodeVersion: process.version,
+  nodeVersion: 'v18.x',
   mongoVersion: '6.0',
   serverTime: new Date().toLocaleString()
 });
