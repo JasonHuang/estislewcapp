@@ -19,12 +19,12 @@
         
         <el-form-item label="产品分类" prop="category">
           <el-select v-model="form.category" placeholder="请选择产品分类">
-            <el-option label="戒指" value="戒指" />
-            <el-option label="项链" value="项链" />
-            <el-option label="手链" value="手链" />
-            <el-option label="耳环" value="耳环" />
-            <el-option label="手镯" value="手镯" />
-            <el-option label="其他" value="其他" />
+            <el-option 
+              v-for="category in categories"
+              :key="category._id"
+              :label="category.name"
+              :value="category._id"
+            />
           </el-select>
         </el-form-item>
         
@@ -40,17 +40,23 @@
         
         <el-form-item label="产品图片" prop="images">
           <el-upload
-            v-model:file-list="fileList"
-            action="/api/upload/multiple"
+            :action="uploadAction"
             :headers="uploadHeaders"
             :on-success="handleUploadSuccess"
             :on-remove="handleUploadRemove"
             :before-upload="beforeUpload"
+            :on-preview="handlePreview"
+            :on-change="handleChange"
+            name="images"
             multiple
             list-type="picture-card"
+            :file-list="fileList"
           >
             <el-icon><Plus /></el-icon>
           </el-upload>
+          <el-dialog v-model="dialogImageVisible" title="图片预览">
+            <img :src="dialogImageUrl" alt="Preview" style="width: 100%;" />
+          </el-dialog>
         </el-form-item>
         
         <el-form-item label="产品规格">
@@ -124,7 +130,8 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useUserStore } from '@/store/user';
-import { getProduct, createProduct, updateProduct } from '@/api/products';
+import { getProduct, createProduct, updateProduct, uploadImages } from '@/api/products';
+import { getPublicCategories } from '@/api/categories';
 
 const router = useRouter();
 const route = useRoute();
@@ -132,8 +139,13 @@ const userStore = useUserStore();
 const formRef = ref(null);
 const loading = ref(false);
 const fileList = ref([]);
+const dialogImageVisible = ref(false);
+const dialogImageUrl = ref('');
+const categories = ref([]);
 
 const isEdit = computed(() => !!route.params.id);
+const uploadAction = 'http://localhost:3001/api/upload/multiple';
+const baseImageUrl = 'http://localhost:3001';
 
 const form = reactive({
   name: '',
@@ -179,7 +191,7 @@ const fetchProduct = async (id) => {
     const data = await getProduct(id);
     Object.assign(form, data);
     fileList.value = data.images.map(url => ({
-      url,
+      url: url.startsWith('http') ? url : `${baseImageUrl}${url}`,
       name: url.split('/').pop()
     }));
   } catch (error) {
@@ -187,12 +199,45 @@ const fetchProduct = async (id) => {
   }
 };
 
+const fetchCategories = async () => {
+  try {
+    const data = await getPublicCategories();
+    categories.value = data;
+  } catch (error) {
+    ElMessage.error('获取分类列表失败');
+  }
+};
+
 const handleUploadSuccess = (response) => {
-  form.images = response.files.map(file => file.path);
+  // 获取新上传的图片路径
+  const newImagePaths = response.files.map(file => file.path);
+  
+  // 合并到现有图片列表中（避免重复）
+  newImagePaths.forEach(path => {
+    if (!form.images.includes(path)) {
+      form.images.push(path);
+    }
+  });
+  
+  // 更新fileList用于显示和预览，合并现有的和新上传的
+  const newFileList = response.files.map(file => ({
+    url: file.path.startsWith('http') ? file.path : `${baseImageUrl}${file.path}`,
+    name: file.path.split('/').pop()
+  }));
+  
+  // 合并文件列表（避免显示重复）
+  const existingNames = fileList.value.map(file => file.name);
+  newFileList.forEach(file => {
+    if (!existingNames.includes(file.name)) {
+      fileList.value.push(file);
+    }
+  });
 };
 
 const handleUploadRemove = (file) => {
-  const index = form.images.indexOf(file.url);
+  // 从已有的图片列表中移除被删除的图片
+  const filename = file.name;
+  const index = form.images.findIndex(path => path.includes(filename));
   if (index > -1) {
     form.images.splice(index, 1);
   }
@@ -211,6 +256,15 @@ const beforeUpload = (file) => {
     return false;
   }
   return true;
+};
+
+const handlePreview = (file) => {
+  dialogImageUrl.value = file.url;
+  dialogImageVisible.value = true;
+};
+
+const handleChange = (file) => {
+  // 处理图片变化时的逻辑
 };
 
 const handleSubmit = async () => {
@@ -241,6 +295,7 @@ const handleCancel = () => {
 };
 
 onMounted(() => {
+  fetchCategories();
   if (isEdit.value) {
     fetchProduct(route.params.id);
   }

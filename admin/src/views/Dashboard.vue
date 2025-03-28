@@ -1,65 +1,23 @@
 <template>
   <div class="dashboard-container">
     <el-row :gutter="20">
-      <el-col :span="6">
+      <el-col :xs="24" :sm="12" :md="6" :lg="6" v-for="(item, index) in cardItems" :key="index" class="mb-20">
         <el-card shadow="hover" class="dashboard-card">
           <template #header>
             <div class="card-header">
-              <span>产品总数</span>
-              <el-icon><Goods /></el-icon>
+              <span>{{ item.title }}</span>
+              <el-icon><component :is="item.icon" /></el-icon>
             </div>
           </template>
           <div class="card-content">
-            <span class="number">{{ statistics.totalProducts }}</span>
-          </div>
-        </el-card>
-      </el-col>
-      
-      <el-col :span="6">
-        <el-card shadow="hover" class="dashboard-card">
-          <template #header>
-            <div class="card-header">
-              <span>轮播图数量</span>
-              <el-icon><Picture /></el-icon>
-            </div>
-          </template>
-          <div class="card-content">
-            <span class="number">{{ statistics.totalBanners }}</span>
-          </div>
-        </el-card>
-      </el-col>
-      
-      <el-col :span="6">
-        <el-card shadow="hover" class="dashboard-card">
-          <template #header>
-            <div class="card-header">
-              <span>热门产品</span>
-              <el-icon><Star /></el-icon>
-            </div>
-          </template>
-          <div class="card-content">
-            <span class="number">{{ statistics.hotProducts }}</span>
-          </div>
-        </el-card>
-      </el-col>
-      
-      <el-col :span="6">
-        <el-card shadow="hover" class="dashboard-card">
-          <template #header>
-            <div class="card-header">
-              <span>用户数量</span>
-              <el-icon><User /></el-icon>
-            </div>
-          </template>
-          <div class="card-content">
-            <span class="number">{{ statistics.totalUsers }}</span>
+            <span class="number">{{ item.value }}</span>
           </div>
         </el-card>
       </el-col>
     </el-row>
     
     <el-row :gutter="20" class="mt-20">
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" class="mb-20">
         <el-card shadow="hover">
           <template #header>
             <div class="card-header">
@@ -67,14 +25,14 @@
             </div>
           </template>
           <el-table :data="recentProducts" style="width: 100%">
-            <el-table-column prop="name" label="产品名称" />
-            <el-table-column prop="category" label="分类" width="100" />
-            <el-table-column prop="price" label="价格" width="120">
+            <el-table-column prop="name" label="产品名称" min-width="120" />
+            <el-table-column prop="category" label="分类" min-width="80" />
+            <el-table-column prop="price" label="价格" min-width="80">
               <template #default="{ row }">
                 ¥{{ row.price.toFixed(2) }}
               </template>
             </el-table-column>
-            <el-table-column prop="createdAt" label="添加时间" width="180">
+            <el-table-column prop="createdAt" label="添加时间" min-width="120">
               <template #default="{ row }">
                 {{ formatDate(row.createdAt) }}
               </template>
@@ -83,7 +41,7 @@
         </el-card>
       </el-col>
       
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12">
         <el-card shadow="hover">
           <template #header>
             <div class="card-header">
@@ -103,8 +61,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { ElMessage } from 'element-plus';
+import { Goods, Picture, Star, User } from '@element-plus/icons-vue';
 import { getProducts } from '@/api/products';
 import { getBanners } from '@/api/banners';
 import { getUsers } from '@/api/auth';
@@ -115,6 +74,13 @@ const statistics = ref({
   hotProducts: 0,
   totalUsers: 0
 });
+
+const cardItems = computed(() => [
+  { title: '产品总数', value: statistics.value.totalProducts, icon: 'Goods' },
+  { title: '轮播图数量', value: statistics.value.totalBanners, icon: 'Picture' },
+  { title: '热门产品', value: statistics.value.hotProducts, icon: 'Star' },
+  { title: '用户数量', value: statistics.value.totalUsers, icon: 'User' }
+]);
 
 const recentProducts = ref([]);
 const systemInfo = ref({
@@ -158,7 +124,10 @@ onMounted(() => {
 }
 
 .dashboard-card {
-  height: 120px;
+  height: 180px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
@@ -168,17 +137,39 @@ onMounted(() => {
 }
 
 .card-content {
-  text-align: center;
-  padding: 20px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
 }
 
 .number {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: bold;
   color: #409eff;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
 }
 
 .mt-20 {
   margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-card {
+    margin-bottom: 15px;
+  }
+  
+  .number {
+    font-size: 28px;
+  }
 }
 </style> 

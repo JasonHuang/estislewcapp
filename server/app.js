@@ -8,6 +8,8 @@ const path = require('path');
 const bannerRoutes = require('./api/banners');
 const productRoutes = require('./api/products');
 const uploadRoutes = require('./api/upload');
+const userRoutes = require('./api/users');
+const categoryRoutes = require('./api/categories');
 
 const app = express();
 
@@ -57,13 +59,17 @@ app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/goldprice', require('./api/goldprice'));
 app.use('/api/auth', require('./api/auth'));
+app.use('/api/users', userRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // 错误处理中间件
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('服务器错误:', err);
+  console.error('错误栈:', err.stack);
   res.status(500).json({
     success: false,
-    message: '服务器内部错误'
+    message: '服务器内部错误',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 

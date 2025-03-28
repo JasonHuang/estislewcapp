@@ -24,6 +24,17 @@ dist/
 build/
 coverage/
 
+# 上传目录和图片文件
+uploads/
+public/uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.svg
+
 # IDE 和编辑器文件
 .idea/
 .vscode/

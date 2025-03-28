@@ -7,9 +7,9 @@ const productSchema = new mongoose.Schema({
     trim: true
   },
   category: {
-    type: String,
-    required: true,
-    enum: ['戒指', '项链', '手链', '耳环', '手镯', '其他']
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
   },
   price: {
     type: Number,

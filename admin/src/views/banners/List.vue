@@ -21,8 +21,8 @@
         <el-table-column label="图片" width="200">
           <template #default="{ row }">
             <el-image
-              :src="row.image"
-              :preview-src-list="[row.image]"
+              :src="getFullImageUrl(row.image)"
+              :preview-src-list="[getFullImageUrl(row.image)]"
               fit="cover"
               class="banner-image"
             />
@@ -74,16 +74,23 @@
         
         <el-form-item label="图片" prop="image">
           <el-upload
-            v-model:file-list="fileList"
-            action="/api/upload/single"
+            :action="uploadAction"
             :headers="uploadHeaders"
             :on-success="handleUploadSuccess"
             :before-upload="beforeUpload"
+            :on-preview="handlePreview"
+            name="image"
             class="banner-uploader"
+            :file-list="fileList"
+            :limit="1"
           >
-            <img v-if="form.image" :src="form.image" class="banner-preview" />
-            <el-icon v-else class="banner-uploader-icon"><Plus /></el-icon>
+            <template v-if="!fileList.length">
+              <el-icon class="banner-uploader-icon"><Plus /></el-icon>
+            </template>
           </el-upload>
+          <el-dialog v-model="previewVisible" title="图片预览">
+            <img :src="previewImageUrl" alt="Preview" style="width: 100%;" />
+          </el-dialog>
         </el-form-item>
         
         <el-form-item label="链接" prop="link">
@@ -116,9 +123,12 @@ const dialogVisible = ref(false);
 const formRef = ref(null);
 const fileList = ref([]);
 const banners = ref([]);
+const previewVisible = ref(false);
+const previewImageUrl = ref('');
 
 const isEdit = ref(false);
 const currentId = ref('');
+const baseImageUrl = 'http://localhost:3001';
 
 const form = reactive({
   title: '',
@@ -139,6 +149,8 @@ const rules = {
 const uploadHeaders = computed(() => ({
   Authorization: `Bearer ${userStore.token}`
 }));
+
+const uploadAction = 'http://localhost:3001/api/upload/single';
 
 const fetchBanners = async () => {
   loading.value = true;
@@ -171,7 +183,7 @@ const handleEdit = (row) => {
   form.link = row.link;
   form.isActive = row.isActive;
   fileList.value = [{
-    url: row.image,
+    url: getFullImageUrl(row.image),
     name: row.image.split('/').pop()
   }];
   dialogVisible.value = true;
@@ -195,6 +207,10 @@ const handleDelete = async (row) => {
 
 const handleUploadSuccess = (response) => {
   form.image = response.file.path;
+  fileList.value = [{
+    url: getFullImageUrl(response.file.path),
+    name: response.file.path.split('/').pop()
+  }];
 };
 
 const beforeUpload = (file) => {
@@ -250,6 +266,18 @@ const handleDragEnd = async (draggingNode, dropNode) => {
   } catch (error) {
     ElMessage.error('排序更新失败');
   }
+};
+
+const getFullImageUrl = (image) => {
+  if (image) {
+    return image.startsWith('http') ? image : `${baseImageUrl}${image}`;
+  }
+  return '';
+};
+
+const handlePreview = (file) => {
+  previewImageUrl.value = file.url;
+  previewVisible.value = true;
 };
 
 onMounted(() => {

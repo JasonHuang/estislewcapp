@@ -11,12 +11,12 @@
       <el-form :inline="true" :model="filterForm">
         <el-form-item label="分类">
           <el-select v-model="filterForm.category" placeholder="选择分类" clearable>
-            <el-option label="戒指" value="戒指" />
-            <el-option label="项链" value="项链" />
-            <el-option label="手链" value="手链" />
-            <el-option label="耳环" value="耳环" />
-            <el-option label="手镯" value="手镯" />
-            <el-option label="其他" value="其他" />
+            <el-option 
+              v-for="category in categories" 
+              :key="category._id" 
+              :label="category.name" 
+              :value="category._id" 
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -36,15 +36,19 @@
         <el-table-column label="产品图片" width="120">
           <template #default="{ row }">
             <el-image
-              :src="row.images[0]"
-              :preview-src-list="row.images"
+              :src="getFullImageUrl(row.images[0])"
+              :preview-src-list="row.images.map(img => getFullImageUrl(img))"
               fit="cover"
               class="product-image"
             />
           </template>
         </el-table-column>
         <el-table-column prop="name" label="产品名称" />
-        <el-table-column prop="category" label="分类" width="100" />
+        <el-table-column prop="category" label="分类" width="100">
+          <template #default="{ row }">
+            {{ getCategoryName(row.category) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="price" label="价格" width="120">
           <template #default="{ row }">
             ¥{{ row.price.toFixed(2) }}
@@ -98,6 +102,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { getProducts, deleteProduct } from '@/api/products';
+import { getPublicCategories } from '@/api/categories';
 
 const router = useRouter();
 const loading = ref(false);
@@ -105,10 +110,23 @@ const products = ref([]);
 const total = ref(0);
 const currentPage = ref(1);
 const pageSize = ref(10);
+const categories = ref([]);
 
 const filterForm = reactive({
   category: ''
 });
+
+const baseImageUrl = 'http://localhost:3001';
+
+const getFullImageUrl = (url) => {
+  if (!url) return '';
+  return url.startsWith('http') ? url : `${baseImageUrl}${url}`;
+};
+
+const getCategoryName = (categoryId) => {
+  const category = categories.value.find(cat => cat._id === categoryId);
+  return category ? category.name : '';
+};
 
 const fetchProducts = async () => {
   loading.value = true;
@@ -171,8 +189,18 @@ const handleDelete = async (row) => {
   }
 };
 
+const fetchCategories = async () => {
+  try {
+    const data = await getPublicCategories();
+    categories.value = data;
+  } catch (error) {
+    ElMessage.error('获取分类列表失败');
+  }
+};
+
 onMounted(() => {
   fetchProducts();
+  fetchCategories();
 });
 </script>
 

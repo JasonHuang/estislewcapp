@@ -39,6 +39,17 @@ logs/
 server/uploads/
 server/logs/
 
+# 上传的文件和图片
+uploads/
+public/uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.svg
+
 # Admin specific
 admin/.vite/
 admin/dist/

@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  openid: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
   lastLogin: {
     type: Date
   },
@@ -42,11 +47,15 @@ userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   
   try {
+    console.log('进入密码加密流程');
     const salt = await bcrypt.genSalt(10);
+    console.log('生成盐值:', salt);
     this.password = await bcrypt.hash(this.password, salt);
+    console.log('密码加密完成');
     this.updatedAt = Date.now();
     next();
   } catch (error) {
+    console.error('密码加密错误:', error);
     next(error);
   }
 });

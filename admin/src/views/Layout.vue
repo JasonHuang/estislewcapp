@@ -2,7 +2,7 @@
   <el-container class="layout-container">
     <el-aside :width="isCollapse ? '64px' : '200px'">
       <div class="logo">
-        <img src="@/assets/images/logo.png" alt="Logo">
+        <el-icon><Shop /></el-icon>
         <span v-show="!isCollapse">屿夏珠宝管理系统</span>
       </div>
       <el-menu
@@ -24,6 +24,11 @@
         <el-menu-item index="/products">
           <el-icon><Goods /></el-icon>
           <template #title>产品管理</template>
+        </el-menu-item>
+        
+        <el-menu-item index="/categories">
+          <el-icon><Files /></el-icon>
+          <template #title>分类管理</template>
         </el-menu-item>
         
         <el-menu-item v-if="isAdmin" index="/users">
@@ -114,6 +119,7 @@ import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/user';
 import { ElMessage } from 'element-plus';
+import { Shop, Files } from '@element-plus/icons-vue';
 import { changePassword } from '@/api/auth';
 
 const router = useRouter();
@@ -198,6 +204,22 @@ const handleChangePassword = async () => {
 <style scoped>
 .layout-container {
   height: 100vh;
+}
+
+.logo {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.logo .el-icon {
+  font-size: 24px;
+  margin-right: 10px;
 }
 
 .el-aside {

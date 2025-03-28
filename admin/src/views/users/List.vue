@@ -18,8 +18,8 @@
         <el-table-column prop="username" label="用户名" />
         <el-table-column prop="role" label="角色" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.role === 'admin' ? 'danger' : 'info'">
-              {{ row.role === 'admin' ? '管理员' : '普通用户' }}
+            <el-tag :type="row.role === 'admin' ? 'danger' : 'warning'">
+              {{ row.role === 'admin' ? '管理员' : '编辑者' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -84,10 +84,23 @@
           />
         </el-form-item>
         
+        <el-form-item v-if="isEdit">
+          <el-checkbox v-model="showPasswordField">修改密码</el-checkbox>
+        </el-form-item>
+        
+        <el-form-item label="新密码" prop="newPassword" v-if="isEdit && showPasswordField">
+          <el-input
+            v-model="form.newPassword"
+            type="password"
+            placeholder="请输入新密码"
+            show-password
+          />
+        </el-form-item>
+        
         <el-form-item label="角色" prop="role">
           <el-select v-model="form.role" placeholder="请选择角色">
             <el-option label="管理员" value="admin" />
-            <el-option label="普通用户" value="user" />
+            <el-option label="编辑者" value="editor" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -104,7 +117,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getUsers, createUser, updateUser, deleteUser } from '@/api/users';
+import { getUsers, createUser, updateUser, deleteUser, changePassword } from '@/api/users';
 
 const loading = ref(false);
 const dialogVisible = ref(false);
@@ -116,11 +129,13 @@ const total = ref(0);
 
 const isEdit = ref(false);
 const currentId = ref('');
+const showPasswordField = ref(false);
 
 const form = reactive({
   username: '',
   password: '',
-  role: 'user'
+  newPassword: '',
+  role: 'editor'
 });
 
 const rules = {
@@ -131,6 +146,21 @@ const rules = {
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, message: '密码长度不能小于6位', trigger: 'blur' }
+  ],
+  newPassword: [
+    { 
+      required: true, 
+      message: '请输入新密码', 
+      trigger: 'blur',
+      validator: (rule, value, callback) => {
+        if (showPasswordField.value && !value) {
+          callback(new Error('请输入新密码'));
+        } else {
+          callback();
+        }
+      }
+    },
+    { min: 6, message: '新密码长度不能小于6位', trigger: 'blur' }
   ],
   role: [
     { required: true, message: '请选择角色', trigger: 'change' }
@@ -158,7 +188,8 @@ const handleCreate = () => {
   currentId.value = '';
   form.username = '';
   form.password = '';
-  form.role = 'user';
+  form.newPassword = '';
+  form.role = 'editor';
   dialogVisible.value = true;
 };
 
@@ -167,6 +198,8 @@ const handleEdit = (row) => {
   currentId.value = row._id;
   form.username = row.username;
   form.role = row.role;
+  form.newPassword = '';
+  showPasswordField.value = false;
   dialogVisible.value = true;
 };
 
@@ -194,8 +227,21 @@ const handleSubmit = async () => {
     loading.value = true;
     
     if (isEdit.value) {
-      await updateUser(currentId.value, form);
-      ElMessage.success('更新成功');
+      await updateUser(currentId.value, {
+        role: form.role,
+        isActive: true
+      });
+      
+      // 如果勾选了修改密码且输入了新密码
+      if (showPasswordField.value && form.newPassword) {
+        await changePassword({
+          userId: currentId.value,
+          newPassword: form.newPassword
+        });
+        ElMessage.success('用户信息和密码更新成功');
+      } else {
+        ElMessage.success('用户信息更新成功');
+      }
     } else {
       await createUser(form);
       ElMessage.success('创建成功');
