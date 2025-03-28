@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/about/about",
+    "pages/products/products",
+    "pages/goldprice/goldprice"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#5D6FBE",
+    "navigationBarTitleText": "屿夏珠宝",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#3A4A8C",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/images/tabbar/home.png",
+        "selectedIconPath": "/images/tabbar/home_selected.png"
+      },
+      {
+        "pagePath": "pages/products/products",
+        "text": "产品",
+        "iconPath": "/images/tabbar/product.png",
+        "selectedIconPath": "/images/tabbar/product_selected.png"
+      },
+      {
+        "pagePath": "pages/goldprice/goldprice",
+        "text": "行情",
+        "iconPath": "/images/tabbar/gold.png",
+        "selectedIconPath": "/images/tabbar/gold_selected.png"
+      },
+      {
+        "pagePath": "pages/about/about",
+        "text": "关于我们",
+        "iconPath": "/images/tabbar/about.png",
+        "selectedIconPath": "/images/tabbar/about_selected.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+} 

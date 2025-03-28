@@ -1,0 +1,76 @@
+<!--about.wxml-->
+<view class="page-container">
+  <!-- 公司介绍 -->
+  <view class="card company-card">
+    <view class="company-header">
+      <image src="{{companyInfo.logo}}" class="company-logo"></image>
+      <view class="company-name gold-text">{{companyName}}</view>
+    </view>
+    <view class="divider"></view>
+    <view class="company-intro">{{companyInfo.intro}}</view>
+  </view>
+
+  <!-- 企业愿景 -->
+  <view class="section-title">企业愿景</view>
+  <view class="card">
+    <view class="vision-content">
+      <view class="vision-text">{{companyInfo.vision}}</view>
+    </view>
+  </view>
+
+  <!-- 核心价值观 -->
+  <view class="section-title">核心价值观</view>
+  <view class="card">
+    <view class="values-list">
+      <block wx:for="{{companyInfo.values}}" wx:key="*this">
+        <view class="value-item">
+          <view class="value-dot"></view>
+          <view class="value-text">{{item}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 团队介绍 -->
+  <view class="section-title">专业团队</view>
+  <view class="team-list">
+    <block wx:for="{{teamInfo}}" wx:key="name">
+      <view class="card team-card">
+        <view class="team-header">
+          <image src="{{item.avatar}}" class="team-avatar"></image>
+          <view class="team-info">
+            <view class="team-name">{{item.name}}</view>
+            <view class="team-title gold-text">{{item.title}}</view>
+          </view>
+        </view>
+        <view class="team-intro">{{item.intro}}</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 联系我们 -->
+  <view class="section-title">联系我们</view>
+  <view class="card contact-card">
+    <view class="contact-item">
+      <view class="contact-label">地址：</view>
+      <view class="contact-value">{{contactInfo.address}}</view>
+    </view>
+    <view class="contact-item">
+      <view class="contact-label">电话：</view>
+      <view class="contact-value phone" bindtap="callPhone">{{contactInfo.phone}}</view>
+    </view>
+    <view class="contact-item">
+      <view class="contact-label">邮箱：</view>
+      <view class="contact-value email" bindtap="copyEmail">{{contactInfo.email}}</view>
+    </view>
+    <view class="contact-item">
+      <view class="contact-label">微信：</view>
+      <view class="contact-value wechat" bindtap="copyWechat">{{contactInfo.wechat}}</view>
+    </view>
+  </view>
+
+  <!-- 底部版权声明 -->
+  <view class="footer">
+    <view class="copyright">© 2024 {{companyName}}. 保留所有权利</view>
+  </view>
+</view> 

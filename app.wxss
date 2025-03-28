@@ -1,0 +1,67 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 0;
+  box-sizing: border-box;
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* 通用样式 */
+.page-container {
+  padding: 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin: 30rpx 0;
+  padding-left: 20rpx;
+  border-left: 8rpx solid #5D6FBE;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.gold-text {
+  color: #3A4A8C;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #5D6FBE, #3A4A8C);
+  color: #fff;
+  border: none;
+  border-radius: 40rpx;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #3A4A8C;
+  border: 1rpx solid #3A4A8C;
+  border-radius: 40rpx;
+}
+
+.divider {
+  height: 2rpx;
+  background-color: #f0f0f0;
+  margin: 20rpx 0;
+}
+
+/* 图片样式 */
+.img-responsive {
+  width: 100%;
+  height: auto;
+}
+
+.img-round {
+  border-radius: 50%;
+} 

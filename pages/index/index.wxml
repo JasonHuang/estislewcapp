@@ -1,0 +1,58 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 轮播图 -->
+  <swiper class="banner" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
+    <block wx:for="{{bannerImages}}" wx:key="*this">
+      <swiper-item>
+        <image src="{{item}}" mode="aspectFill" class="banner-image" bindtap="previewImage" data-src="{{item}}"/>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 公司名称 -->
+  <view class="company-title">
+    <text class="gold-text">{{companyName}}</text>
+  </view>
+
+  <!-- 特色服务 -->
+  <view class="section">
+    <view class="section-title">我们的特色</view>
+    <view class="features">
+      <block wx:for="{{features}}" wx:key="id">
+        <view class="feature-item">
+          <image src="{{item.icon}}" class="feature-icon"></image>
+          <view class="feature-title">{{item.title}}</view>
+          <view class="feature-desc">{{item.desc}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 热门产品 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title">热门产品</view>
+      <view class="more" bindtap="navigateToProducts">更多 ></view>
+    </view>
+    <view class="product-list">
+      <block wx:for="{{hotProducts}}" wx:key="id">
+        <view class="product-item">
+          <image src="{{item.image}}" mode="aspectFill" class="product-image" bindtap="previewImage" data-src="{{item.image}}"></image>
+          <view class="product-info">
+            <text class="product-name">{{item.name}}</text>
+            <text class="product-price gold-text">{{item.price}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 了解更多 -->
+  <view class="section">
+    <view class="about-section">
+      <view class="about-title">品牌故事</view>
+      <view class="about-desc">屿夏珠宝致力于为每一位顾客打造独特、精致的珠宝作品，让美丽与品质伴随您的每一刻。</view>
+      <button class="btn-primary about-btn" bindtap="navigateToAbout">了解更多</button>
+    </view>
+  </view>
+</view> 

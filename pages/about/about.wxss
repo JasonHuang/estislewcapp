@@ -1,0 +1,147 @@
+/* about.wxss */
+.page-container {
+  padding: 30rpx 20rpx;
+}
+
+.company-card {
+  margin-bottom: 40rpx;
+}
+
+.company-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.company-logo {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  margin-right: 20rpx;
+  border: 2rpx solid #5D6FBE;
+}
+
+.company-name {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.company-intro {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  margin-top: 20rpx;
+}
+
+.vision-content {
+  padding: 20rpx;
+  background: rgba(93, 111, 190, 0.05);
+  border-radius: 8rpx;
+}
+
+.vision-text {
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.6;
+  font-style: italic;
+  text-align: center;
+}
+
+.values-list {
+  padding: 10rpx 0;
+}
+
+.value-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.value-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background-color: #5D6FBE;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.value-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.5;
+}
+
+.team-list {
+  margin-bottom: 40rpx;
+}
+
+.team-card {
+  margin-bottom: 20rpx;
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.team-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50rpx;
+  margin-right: 20rpx;
+  border: 2rpx solid #5D6FBE;
+}
+
+.team-info {
+  flex: 1;
+}
+
+.team-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+
+.team-title {
+  font-size: 26rpx;
+}
+
+.team-intro {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.contact-item {
+  display: flex;
+  margin-bottom: 16rpx;
+}
+
+.contact-label {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  width: 100rpx;
+}
+
+.contact-value {
+  font-size: 28rpx;
+  color: #666;
+  flex: 1;
+}
+
+.phone, .email, .wechat {
+  color: #3A4A8C;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 60rpx;
+  padding: 30rpx 0;
+}
+
+.copyright {
+  font-size: 24rpx;
+  color: #999;
+} 

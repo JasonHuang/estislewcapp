@@ -1,0 +1,50 @@
+# 微信开发者工具本地配置
+project.private.config.json
+
+# 依赖目录
+miniprogram_npm/
+node_modules/
+
+# 编译输出
+dist/
+miniprogram_dist/
+
+# 临时文件
+.DS_Store
+*.log
+*.tmp
+*.temp
+
+# IDE 和编辑器文件
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 微信开发者工具本地数据
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 本地环境配置
+.env
+.env.local
+.env.*.local
+
+# 其他
+*.bak
+*.cache
+*.temp 

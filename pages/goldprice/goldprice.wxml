@@ -1,0 +1,107 @@
+<!--goldprice.wxml-->
+<view class="page-container">
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">数据加载中...</view>
+  </view>
+
+  <view class="content" wx:else>
+    <!-- 选项卡导航 -->
+    <view class="tabs">
+      <block wx:for="{{tabs}}" wx:key="id">
+        <view class="tab-item {{currentTab == item.id ? 'active' : ''}}" 
+              bindtap="switchTab" 
+              data-tab="{{item.id}}">
+          {{item.name}}
+        </view>
+      </block>
+    </view>
+
+    <!-- 实时金价 -->
+    <view class="tab-content" wx:if="{{currentTab == 'price'}}">
+      <view class="price-card">
+        <view class="price-header">
+          <view class="price-title">当前金价</view>
+          <view class="refresh-btn" bindtap="refreshPrice">刷新</view>
+        </view>
+        <view class="price-main">
+          <view class="price-value gold-text">
+            <text class="price-number">{{goldData.currentPrice}}</text>
+            <text class="price-unit">{{goldData.unit}}</text>
+          </view>
+          <view class="price-change {{goldData.trend}}">
+            <text>{{goldData.changeAmount}}</text>
+            <text class="change-percent">({{goldData.changePercent}})</text>
+          </view>
+        </view>
+        <view class="price-footer">
+          <view class="update-time">更新时间: {{goldData.updateTime}}</view>
+          <view class="notification" bindtap="setNotification">设置提醒</view>
+        </view>
+      </view>
+
+      <view class="daily-price">
+        <view class="section-title">近7日金价</view>
+        <view class="daily-list">
+          <block wx:for="{{goldData.dailyData}}" wx:key="date">
+            <view class="daily-item">
+              <view class="daily-date">{{item.date}}</view>
+              <view class="daily-price-value gold-text">{{item.price}}</view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 价格走势 -->
+    <view class="tab-content" wx:elif="{{currentTab == 'trend'}}">
+      <view class="chart-card">
+        <view class="chart-title">7日金价走势图</view>
+        <view class="chart-container">
+          <!-- 在真实项目中，这里应该使用ECharts或其他图表组件 -->
+          <view class="chart-placeholder">
+            <view class="chart-line">
+              <block wx:for="{{goldData.chartData.series}}" wx:key="*this" wx:for-index="idx">
+                <view class="chart-point" style="height: {{(item-420)*10}}rpx; left: {{idx*14.28}}%"></view>
+              </block>
+            </view>
+            <view class="chart-dates">
+              <block wx:for="{{goldData.chartData.categories}}" wx:key="*this">
+                <view class="chart-date">{{item}}</view>
+              </block>
+            </view>
+          </view>
+        </view>
+        <view class="chart-note">注：金价走势仅供参考，实际交易以当前金价为准</view>
+      </view>
+    </view>
+
+    <!-- 饰品金价 -->
+    <view class="tab-content" wx:elif="{{currentTab == 'jewelry'}}">
+      <view class="jewelry-card">
+        <view class="jewelry-header">
+          <view class="jewelry-title">各类饰品金价参考</view>
+          <view class="jewelry-note">单位: 元/克</view>
+        </view>
+        <view class="jewelry-list">
+          <block wx:for="{{goldData.jewelryPrice}}" wx:key="type">
+            <view class="jewelry-item">
+              <view class="jewelry-type">{{item.type}}</view>
+              <view class="jewelry-price gold-text">{{item.price}}</view>
+            </view>
+          </block>
+        </view>
+        <view class="jewelry-tip">
+          <view class="tip-icon">i</view>
+          <view class="tip-text">金价仅作参考，实际价格可能会因工费、设计等因素而有所不同</view>
+        </view>
+      </view>
+
+      <view class="calculator-entry">
+        <view class="calculator-title">想要计算饰品价格？</view>
+        <view class="calculator-btn">价格计算器</view>
+      </view>
+    </view>
+  </view>
+</view> 

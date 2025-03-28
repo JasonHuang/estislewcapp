@@ -1,0 +1,44 @@
+<!--products.wxml-->
+<view class="page-container">
+  <!-- 分类标签 -->
+  <scroll-view scroll-x="true" class="categories-scroll">
+    <view class="categories">
+      <block wx:for="{{categories}}" wx:key="id">
+        <view class="category-item {{currentCategory == item.id ? 'active' : ''}}" 
+              bindtap="switchCategory" 
+              data-category="{{item.id}}">
+          {{item.name}}
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+
+  <!-- 产品列表 -->
+  <view class="products-list" wx:if="{{filteredProducts.length > 0}}">
+    <block wx:for="{{filteredProducts}}" wx:key="id">
+      <view class="product-card" bindtap="viewProductDetail" data-id="{{item.id}}">
+        <image src="{{item.image}}" mode="aspectFill" class="product-image" 
+               bindtap="previewImage" data-src="{{item.image}}" 
+               catchtap></image>
+        <view class="product-info">
+          <view class="product-name">{{item.name}}</view>
+          <view class="product-description">{{item.description}}</view>
+          <view class="product-price gold-text">{{item.price}}</view>
+        </view>
+        <view class="product-detail-btn">查看详情</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 无产品提示 -->
+  <view class="empty-tip" wx:else>
+    <image src="/images/empty.png" class="empty-icon"></image>
+    <view class="empty-text">暂无相关产品</view>
+  </view>
+
+  <!-- 技术支持提示 -->
+  <view class="technical-support">
+    <view class="divider"></view>
+    <view class="support-text">产品信息仅供参考，详情请咨询客服</view>
+  </view>
+</view> 
