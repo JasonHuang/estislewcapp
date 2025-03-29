@@ -34,18 +34,14 @@
   <!-- 团队介绍 -->
   <view class="section-title">专业团队</view>
   <view class="team-list">
-    <block wx:for="{{teamInfo}}" wx:key="name">
-      <view class="card team-card">
-        <view class="team-header">
-          <image src="{{item.avatar}}" class="team-avatar"></image>
-          <view class="team-info">
-            <view class="team-name">{{item.name}}</view>
-            <view class="team-title gold-text">{{item.title}}</view>
-          </view>
-        </view>
-        <view class="team-intro">{{item.intro}}</view>
+    <view class="team-item" wx:for="{{teamInfo}}" wx:key="id">
+      <image src="{{item.avatar}}" mode="aspectFill" class="team-avatar"></image>
+      <view class="team-info">
+        <view class="team-name">{{item.name}}</view>
+        <view class="team-role">{{item.role}}</view>
+        <view class="team-description">{{item.description}}</view>
       </view>
-    </block>
+    </view>
   </view>
 
   <!-- 联系我们 -->

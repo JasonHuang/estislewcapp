@@ -22,22 +22,25 @@ Page({
     },
     teamInfo: [
       {
-        name: '张总监',
-        title: '创意总监',
-        avatar: '/images/team1.jpg',
-        intro: '拥有15年珠宝设计经验，曾获多项国际珠宝设计大奖'
+        id: 1,
+        name: '张三',
+        role: '创始人 & 首席设计师',
+        avatar: '/images/team/team1.png',
+        description: '拥有超过15年的珠宝设计经验，曾在国际知名品牌担任设计总监，对珠宝设计有独特的见解和创新理念。'
       },
       {
-        name: '李经理',
-        title: '生产经理',
-        avatar: '/images/team2.jpg',
-        intro: '精通各类珠宝制作工艺，带领团队打造精品珠宝'
+        id: 2,
+        name: '李四',
+        role: '工艺总监',
+        avatar: '/images/team/team2.png',
+        description: '精通各种珠宝制作工艺，坚持传统工艺与现代技术的结合，确保每件作品都达到极致的品质和工艺水准。'
       },
       {
-        name: '王顾问',
-        title: '珠宝顾问',
-        avatar: '/images/team3.jpg',
-        intro: '宝石学专家，为客户提供专业的珠宝选购建议'
+        id: 3,
+        name: '王五',
+        role: '产品经理',
+        avatar: '/images/team/team3.png',
+        description: '负责产品开发和市场调研，深入了解消费者需求，确保每一件产品都能满足客户的期望。'
       }
     ]
   },

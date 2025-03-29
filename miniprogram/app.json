@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/about/about",
     "pages/products/products",
+    "pages/products/detail",
     "pages/goldprice/goldprice"
   ],
   "window": {

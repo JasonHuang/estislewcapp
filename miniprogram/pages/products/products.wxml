@@ -30,10 +30,10 @@
     </block>
   </view>
 
-  <!-- 无产品提示 -->
-  <view class="empty-tip" wx:else>
-    <image src="/images/empty.png" class="empty-icon"></image>
-    <view class="empty-text">暂无相关产品</view>
+  <!-- 空状态 -->
+  <view class="empty-container" wx:if="{{filteredProducts.length === 0 && !loading}}">
+    <image src="/images/products/images-1743149752673-55580222.jpg" class="empty-icon"></image>
+    <text class="empty-text">暂无产品</text>
   </view>
 
   <!-- 技术支持提示 -->

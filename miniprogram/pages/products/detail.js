@@ -17,13 +17,29 @@ Page({
   // 加载产品详情
   loadProductDetail(id) {
     this.setData({ loading: true });
-    api.products.getDetail(id)
+    
+    // 先获取分类列表
+    api.products.getCategories()
+      .then(categories => {
+        this.categories = categories; // 存储分类列表
+        return api.products.getDetail(id); // 获取产品详情
+      })
       .then(product => {
-        // 处理图片URL
+        // 找到产品分类名称
+        let categoryName = '未分类';
+        if (product.category && this.categories) {
+          const category = this.categories.find(cat => cat._id === product.category);
+          if (category) {
+            categoryName = category.name;
+          }
+        }
+        
+        // 处理产品数据
         const formattedProduct = {
           ...product,
           images: product.images.map(img => this.data.baseUrl + img),
-          formattedPrice: `¥${product.price.toFixed(2)}`
+          formattedPrice: `¥${product.price.toFixed(2)}`,
+          categoryName: categoryName
         };
         
         this.setData({ 

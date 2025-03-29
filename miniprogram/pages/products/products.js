@@ -69,7 +69,7 @@ Page({
         id: product._id,
         name: product.name,
         price: `¥${product.price.toFixed(2)}`,
-        image: product.images[0] ? this.data.baseUrl + product.images[0] : '../images/products/images-1743149752673-55580222.jpg',
+        image: product.images[0] ? this.data.baseUrl + product.images[0] : '/images/products/images-1743149752673-55580222.jpg',
         category: product.category,
         description: product.description
       }))
@@ -113,7 +113,7 @@ Page({
   viewProductDetail: function(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: `/pages/products/detail?id=${id}`
+      url: `detail?id=${id}`
     })
   },
   previewImage: function(e) {

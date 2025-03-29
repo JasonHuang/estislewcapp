@@ -75,14 +75,14 @@
   margin-bottom: 40rpx;
 }
 
-.team-card {
-  margin-bottom: 20rpx;
-}
-
-.team-header {
+.team-item {
+  background-color: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  padding: 30rpx;
   display: flex;
-  align-items: center;
-  margin-bottom: 20rpx;
+  align-items: flex-start;
 }
 
 .team-avatar {
@@ -103,11 +103,13 @@
   margin-bottom: 6rpx;
 }
 
-.team-title {
+.team-role {
   font-size: 26rpx;
+  color: #D4AF37;
+  margin-bottom: 15rpx;
 }
 
-.team-intro {
+.team-description {
   font-size: 28rpx;
   color: #666;
   line-height: 1.5;

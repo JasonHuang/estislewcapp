@@ -10,9 +10,12 @@
     <!-- 图片轮播 -->
     <swiper 
       class="image-swiper" 
-      indicator-dots
-      autoplay
-      circular
+      indicator-dots="{{true}}"
+      indicator-color="rgba(255, 255, 255, 0.5)"
+      indicator-active-color="#D4AF37"
+      autoplay="{{true}}"
+      interval="4000"
+      circular="{{true}}"
       bindchange="onImageChange"
       bindtap="onPreviewImage"
     >
@@ -24,35 +27,44 @@
     <!-- 产品信息 -->
     <view class="product-info">
       <view class="product-name">{{product.name}}</view>
-      <view class="product-price">¥{{product.price}}</view>
-      <view class="product-category">{{product.category}}</view>
+      <view class="product-price">{{product.formattedPrice}}</view>
+      <view class="product-category">{{product.categoryName || '未分类'}}</view>
+      
+      <!-- 产品描述 -->
+      <view class="description" wx:if="{{product.description}}">
+        <view class="section-title">产品描述</view>
+        <text class="desc-text">{{product.description || '暂无产品描述'}}</text>
+      </view>
       
       <!-- 产品规格 -->
       <view class="specifications">
         <view class="section-title">产品规格</view>
-        <view class="spec-item" wx:if="{{product.specifications.material}}">
-          <text class="label">材质：</text>
-          <text class="value">{{product.specifications.material}}</text>
-        </view>
-        <view class="spec-item" wx:if="{{product.specifications.weight}}">
-          <text class="label">重量：</text>
-          <text class="value">{{product.specifications.weight}}g</text>
-        </view>
-        <view class="spec-item" wx:if="{{product.specifications.size}}">
-          <text class="label">尺寸：</text>
-          <text class="value">{{product.specifications.size}}</text>
-        </view>
-        <view class="spec-item" wx:if="{{product.specifications.purity}}">
-          <text class="label">纯度：</text>
-          <text class="value">{{product.specifications.purity}}</text>
-        </view>
+        <block wx:if="{{product.specifications && (product.specifications.material || product.specifications.weight || product.specifications.size || product.specifications.purity)}}">
+          <view class="spec-item" wx:if="{{product.specifications.material}}">
+            <text class="label">材质</text>
+            <text class="value">{{product.specifications.material}}</text>
+          </view>
+          <view class="spec-item" wx:if="{{product.specifications.weight}}">
+            <text class="label">重量</text>
+            <text class="value">{{product.specifications.weight}}g</text>
+          </view>
+          <view class="spec-item" wx:if="{{product.specifications.size}}">
+            <text class="label">尺寸</text>
+            <text class="value">{{product.specifications.size}}</text>
+          </view>
+          <view class="spec-item" wx:if="{{product.specifications.purity}}">
+            <text class="label">纯度</text>
+            <text class="value">{{product.specifications.purity}}</text>
+          </view>
+        </block>
+        <view wx:else class="empty-specs">暂无规格信息</view>
       </view>
-
-      <!-- 产品描述 -->
-      <view class="description">
-        <view class="section-title">产品描述</view>
-        <text class="desc-text">{{product.description}}</text>
-      </view>
+    </view>
+    
+    <!-- 底部操作栏 -->
+    <view class="footer-actions">
+      <button class="action-button" open-type="contact"><text>咨询详情</text></button>
+      <button class="action-button share-button" open-type="share"><text>分享产品</text></button>
     </view>
   </block>
 </view> 
