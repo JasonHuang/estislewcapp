@@ -31,12 +31,6 @@
         "selectedIconPath": "/images/tabbar/product_selected.png"
       },
       {
-        "pagePath": "pages/goldprice/goldprice",
-        "text": "行情",
-        "iconPath": "/images/tabbar/gold.png",
-        "selectedIconPath": "/images/tabbar/gold_selected.png"
-      },
-      {
         "pagePath": "pages/about/about",
         "text": "关于我们",
         "iconPath": "/images/tabbar/about.png",

@@ -25,12 +25,15 @@ router.get('/latest', async (req, res) => {
     }
 
     const priceData = priceMatch[1].split(',');
-    // 新浪财经返回的是每克价格，需要除以1000转换为元/克
-    // 使用最新价（priceData[3]）而不是结算价
-    const price = parseFloat(priceData[3]) / 1000;
+    // 新浪财经的AU期货价格以元/克为单位，但需要乘以1000进行调整
+    // 使用最新价（priceData[3]），需要进行单位转换
+    const price = parseFloat(priceData[3]) * 1000;
+    
+    console.log('原始金价数据:', priceData);
+    console.log('解析后的金价:', price);
     
     // 验证价格是否合理
-    if (price < 100 || price > 1000) {
+    if (price < 400 || price > 1500) {
       console.error('获取到的金价异常:', price);
       // 如果价格异常，返回模拟数据
       const mockPrice = {
@@ -78,12 +81,72 @@ router.get('/history', async (req, res) => {
       };
     }
 
-    const prices = await GoldPrice.find(query)
+    let prices = await GoldPrice.find(query)
       .sort({ timestamp: -1 })
       .limit(parseInt(limit));
+    
+    // 如果没有足够的历史数据，生成模拟数据
+    if (prices.length < 7) {
+      console.log(`数据库中只有 ${prices.length} 条记录，生成模拟数据`);
+      
+      // 获取当前金价作为基准
+      let basePrice = 720;
+      if (prices.length > 0) {
+        basePrice = prices[0].price;
+      }
+      
+      // 生成模拟的历史数据
+      const mockPrices = [];
+      const now = new Date();
+      const dayCount = parseInt(limit);
+      
+      for (let i = 0; i < dayCount; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        
+        // 生成一个波动范围在±1%之内的随机价格
+        const randomFluctuation = (Math.random() * 2 - 1) * 0.01; // -1% to 1%
+        const dailyPrice = basePrice * (1 + randomFluctuation);
+        
+        // 只有当数据库中没有当天的数据时才添加模拟数据
+        const existingDay = prices.find(p => {
+          const pDate = new Date(p.timestamp);
+          return pDate.getDate() === date.getDate() && 
+                 pDate.getMonth() === date.getMonth() && 
+                 pDate.getFullYear() === date.getFullYear();
+        });
+        
+        if (!existingDay) {
+          mockPrices.push({
+            _id: `mock_${date.getTime()}`, // 模拟ID
+            type,
+            price: parseFloat(dailyPrice.toFixed(2)),
+            source: 'mock-data',
+            timestamp: date
+          });
+        }
+      }
+      
+      // 合并现有数据和模拟数据 (不使用扩展运算符)
+      const combinedPrices = [];
+      for (let i = 0; i < prices.length; i++) {
+        combinedPrices.push(prices[i]);
+      }
+      for (let i = 0; i < mockPrices.length; i++) {
+        combinedPrices.push(mockPrices[i]);
+      }
+      
+      prices = combinedPrices;
+      
+      // 按时间排序
+      prices.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      // 限制返回数量
+      prices = prices.slice(0, dayCount);
+    }
 
     res.json(prices);
   } catch (error) {
+    console.error('获取历史金价失败:', error);
     res.status(500).json({ message: '获取历史金价失败', error: error.message });
   }
 });

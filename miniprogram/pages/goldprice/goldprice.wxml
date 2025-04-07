@@ -59,13 +59,43 @@
       <view class="chart-card">
         <view class="chart-title">7日金价走势图</view>
         <view class="chart-container">
-          <!-- 在真实项目中，这里应该使用ECharts或其他图表组件 -->
           <view class="chart-placeholder">
+            <!-- Y轴 -->
+            <view class="chart-y-axis">
+              <text class="chart-y-max">{{goldData.chartYAxis.max}}元</text>
+              <text class="chart-y-mid">{{goldData.chartYAxis.mid}}元</text>
+              <text class="chart-y-min">{{goldData.chartYAxis.min}}元</text>
+            </view>
+            
+            <!-- 网格线 -->
+            <view class="chart-grid">
+              <view class="chart-grid-line max"></view>
+              <view class="chart-grid-line mid"></view>
+              <view class="chart-grid-line min"></view>
+            </view>
+            
+            <!-- 图表区域 -->
             <view class="chart-line">
+              <!-- 连接线 -->
+              <block wx:for="{{goldData.chartData.series}}" wx:key="*this" wx:for-index="idx" wx:if="{{idx < goldData.chartData.series.length-1}}">
+                <view class="chart-line-connector" 
+                      style="left: {{idx*14.28 + 7.14}}%; width: {{14.28}}%; height: 2rpx; bottom: {{(goldData.chartData.series[idx]-goldData.chartYAxis.min)/(goldData.chartYAxis.max-goldData.chartYAxis.min)*320}}rpx;"></view>
+              </block>
+              
+              <!-- 区域填充 -->
+              <view class="chart-area" 
+                    style="height: {{(goldData.chartData.series[0]-goldData.chartYAxis.min)/(goldData.chartYAxis.max-goldData.chartYAxis.min)*320}}rpx;"></view>
+              
+              <!-- 数据点 -->
               <block wx:for="{{goldData.chartData.series}}" wx:key="*this" wx:for-index="idx">
-                <view class="chart-point" style="height: {{(item-420)*10}}rpx; left: {{idx*14.28}}%"></view>
+                <view class="chart-point" 
+                      style="bottom: {{(item-goldData.chartYAxis.min)/(goldData.chartYAxis.max-goldData.chartYAxis.min)*320}}rpx; left: {{idx*14.28 + 7.14}}%">
+                  <view class="chart-point-value">{{item}}元</view>
+                </view>
               </block>
             </view>
+            
+            <!-- X轴日期 -->
             <view class="chart-dates">
               <block wx:for="{{goldData.chartData.categories}}" wx:key="*this">
                 <view class="chart-date">{{item}}</view>
@@ -74,6 +104,29 @@
           </view>
         </view>
         <view class="chart-note">注：金价走势仅供参考，实际交易以当前金价为准</view>
+      </view>
+      
+      <!-- 添加统计信息卡片 -->
+      <view class="chart-stats-card">
+        <view class="stats-title">价格统计</view>
+        <view class="stats-list">
+          <view class="stats-item">
+            <view class="stats-label">最高价</view>
+            <view class="stats-value">{{goldData.chartStats.max}}元/克</view>
+          </view>
+          <view class="stats-item">
+            <view class="stats-label">最低价</view>
+            <view class="stats-value">{{goldData.chartStats.min}}元/克</view>
+          </view>
+          <view class="stats-item">
+            <view class="stats-label">平均价</view>
+            <view class="stats-value">{{goldData.chartStats.avg}}元/克</view>
+          </view>
+          <view class="stats-item">
+            <view class="stats-label">波动幅度</view>
+            <view class="stats-value">{{goldData.chartStats.range}}%</view>
+          </view>
+        </view>
       </view>
     </view>
 

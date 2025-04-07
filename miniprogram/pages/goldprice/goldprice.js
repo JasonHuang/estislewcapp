@@ -16,6 +16,17 @@ Page({
         categories: [],
         series: []
       },
+      chartYAxis: {
+        min: 0,
+        mid: 0,
+        max: 0
+      },
+      chartStats: {
+        max: '--',
+        min: '--',
+        avg: '--',
+        range: '--'
+      },
       jewelryPrice: [
         { type: '足金(24K)', price: '--' },
         { type: 'K金(18K)', price: '--' },
@@ -116,17 +127,77 @@ Page({
 
   // 处理图表数据
   processChartData(prices) {
-    const categories = prices.map(p => this.formatDate(p.timestamp));
-    const series = prices.map(p => p.price);
+    // 使用兼容的方法处理数据
+    const categories = [];
+    const series = [];
+    
+    for (let i = 0; i < prices.length; i++) {
+      categories.push(this.formatDate(prices[i].timestamp));
+      series.push(prices[i].price);
+    }
+    
+    // 计算Y轴数据
+    let min = series[0];
+    let max = series[0];
+    
+    // 找出最大值和最小值
+    for (let i = 0; i < series.length; i++) {
+      if (series[i] < min) min = series[i];
+      if (series[i] > max) max = series[i];
+    }
+    
+    // 为了更好的显示效果，扩大范围5%
+    const range = max - min;
+    min = Math.floor((min - range * 0.05) / 10) * 10; // 向下取整到10的倍数
+    max = Math.ceil((max + range * 0.05) / 10) * 10;  // 向上取整到10的倍数
+    const mid = Math.round((min + max) / 2);
+    
+    // 计算统计数据
+    const priceMax = Math.max.apply(null, series);
+    const priceMin = Math.min.apply(null, series);
+    
+    // 计算平均价
+    let sum = 0;
+    for (let i = 0; i < series.length; i++) {
+      sum += series[i];
+    }
+    const avg = sum / series.length;
+    
+    // 计算波动幅度
+    const fluctuationRange = ((priceMax - priceMin) / priceMin * 100);
+    
+    // 更新统计数据
+    this.setData({
+      'goldData.chartStats': {
+        max: priceMax.toFixed(2),
+        min: priceMin.toFixed(2),
+        avg: avg.toFixed(2),
+        range: fluctuationRange.toFixed(2)
+      }
+    });
+    
+    // 更新Y轴数据
+    this.setData({
+      'goldData.chartYAxis': {
+        min,
+        mid,
+        max
+      }
+    });
+    
     return { categories, series };
   },
 
   // 处理每日数据
   processDailyData(prices) {
-    return prices.map(p => ({
-      date: this.formatDate(p.timestamp),
-      price: p.price.toFixed(2)
-    }));
+    const result = [];
+    for (let i = 0; i < prices.length; i++) {
+      result.push({
+        date: this.formatDate(prices[i].timestamp),
+        price: prices[i].price.toFixed(2)
+      });
+    }
+    return result;
   },
 
   // 格式化日期
@@ -138,7 +209,7 @@ Page({
   // 格式化时间
   formatTime(date) {
     const d = new Date(date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   },
 
   switchTab: function(e) {
@@ -147,44 +218,27 @@ Page({
       currentTab: tabId
     })
   },
+
   refreshPrice: function() {
     this.setData({ loading: true })
-    // 模拟刷新数据
-    setTimeout(() => {
-      this.setData({
-        loading: false,
-        'goldData.updateTime': this.getCurrentTime()
-      })
+    // 调用实际的刷新接口
+    this.fetchGoldPrice().then(() => {
       wx.showToast({
         title: '刷新成功',
         icon: 'success'
       })
-    }, 1000)
+    }).catch(() => {
+      wx.showToast({
+        title: '刷新失败',
+        icon: 'error'
+      })
+    })
   },
-  getCurrentTime: function() {
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = String(now.getMonth() + 1).padStart(2, '0')
-    const day = String(now.getDate()).padStart(2, '0')
-    const hour = String(now.getHours()).padStart(2, '0')
-    const minute = String(now.getMinutes()).padStart(2, '0')
-    const second = String(now.getSeconds()).padStart(2, '0')
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`
-  },
-  // 通知提醒功能
+
   setNotification: function() {
-    wx.showModal({
-      title: '设置提醒',
-      content: '当金价达到目标价格时通知您？',
-      confirmText: '设置',
-      success: (res) => {
-        if (res.confirm) {
-          wx.showToast({
-            title: '功能开发中',
-            icon: 'none'
-          })
-        }
-      }
+    wx.showToast({
+      title: '功能开发中',
+      icon: 'none'
     })
   }
 }) 
