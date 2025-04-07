@@ -35,6 +35,11 @@
           <el-icon><User /></el-icon>
           <template #title>用户管理</template>
         </el-menu-item>
+        
+        <el-menu-item index="/about">
+          <el-icon><InfoFilled /></el-icon>
+          <template #title>关于我们</template>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     
@@ -119,7 +124,7 @@ import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/user';
 import { ElMessage } from 'element-plus';
-import { Shop, Files } from '@element-plus/icons-vue';
+import { User, Monitor, Picture, Goods, Files, Shop, Expand, Fold, ArrowDown, InfoFilled } from '@element-plus/icons-vue';
 import { changePassword } from '@/api/auth';
 
 const router = useRouter();

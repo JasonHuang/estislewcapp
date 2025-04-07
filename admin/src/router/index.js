@@ -48,6 +48,11 @@ const routes = [
         name: 'Users',
         component: () => import('@/views/users/List.vue'),
         meta: { requiresAdmin: true }
+      },
+      {
+        path: 'about',
+        name: 'About',
+        component: () => import('@/views/about/Form.vue')
       }
     ]
   }

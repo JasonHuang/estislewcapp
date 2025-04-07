@@ -3,6 +3,36 @@
   padding: 30rpx 20rpx;
 }
 
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300rpx;
+  margin: 100rpx 0;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid rgba(93, 111, 190, 0.2);
+  border-top: 6rpx solid #5D6FBE;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
 .company-card {
   margin-bottom: 40rpx;
 }

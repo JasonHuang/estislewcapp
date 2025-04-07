@@ -1,5 +1,6 @@
 // about.js
 const app = getApp()
+const api = require('../../utils/api')
 
 Page({
   data: {
@@ -42,18 +43,75 @@ Page({
         avatar: '/images/team/team3.png',
         description: '负责产品开发和市场调研，深入了解消费者需求，确保每一件产品都能满足客户的期望。'
       }
-    ]
+    ],
+    loading: true,
+    baseUrl: 'http://127.0.0.1:3001' // 使用本地回环地址
   },
   onLoad: function() {
     wx.setNavigationBarTitle({
       title: '关于我们'
     })
+    
+    this.fetchAboutInfo()
   },
-  callPhone: function() {
-    wx.makePhoneCall({
-      phoneNumber: this.data.contactInfo.phone.replace(/\s+/g, '')
+
+  // 获取"关于我们"信息
+  fetchAboutInfo: function() {
+    this.setData({ loading: true })
+    
+    api.about.getInfo().then(res => {
+      console.log('获取到的关于我们信息:', res)
+      
+      // 处理团队成员信息
+      let teamInfo = this.data.teamInfo
+      if (res.team && res.team.length > 0) {
+        teamInfo = res.team.map((member, index) => {
+          return {
+            id: index + 1,
+            name: member.name,
+            role: member.position,
+            avatar: this.getFullImageUrl(member.photo),
+            description: member.intro
+          }
+        })
+      }
+      
+      this.setData({
+        companyName: res.companyName,
+        companyInfo: {
+          logo: this.getFullImageUrl(res.logo),
+          intro: res.intro,
+          vision: res.vision,
+          values: res.values || []
+        },
+        contactInfo: {
+          address: res.address,
+          phone: res.phone,
+          email: res.email,
+          wechat: res.wechat
+        },
+        teamInfo: teamInfo,
+        loading: false
+      })
+    }).catch(err => {
+      console.error('获取关于我们信息失败:', err)
+      this.setData({ loading: false })
     })
   },
+  
+  // 处理图片URL
+  getFullImageUrl: function(path) {
+    if (!path) return '/images/logo.png'
+    if (path.startsWith('http')) return path
+    return this.data.baseUrl + path
+  },
+  
+  callPhone: function() {
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactInfo.phone
+    })
+  },
+  
   copyEmail: function() {
     wx.setClipboardData({
       data: this.data.contactInfo.email,
@@ -65,6 +123,7 @@ Page({
       }
     })
   },
+  
   copyWechat: function() {
     wx.setClipboardData({
       data: this.data.contactInfo.wechat,
@@ -76,4 +135,4 @@ Page({
       }
     })
   }
-}) 
+})

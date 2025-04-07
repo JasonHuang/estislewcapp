@@ -99,6 +99,14 @@ const api = {
     getProfile: () => request('/auth/profile', {
       method: 'GET'
     })
+  },
+  
+  // 关于我们
+  about: {
+    // 获取关于我们信息
+    getInfo: () => request('/about', {
+      method: 'GET'
+    })
   }
 };
 
